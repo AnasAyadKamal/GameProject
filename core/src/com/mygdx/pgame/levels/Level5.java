@@ -350,6 +350,21 @@ boolean crafted;
 				if(gun.overLaps(r))
 					gun.remove();
 			}
+			for(BaseActor gun:BaseActor.getList(mainStage, "com.mygdx.pgame.levels.BombyBullet"))
+			{
+				if(gun.overLaps(r))
+					gun.remove();
+			}
+			for(BaseActor gun:BaseActor.getList(mainStage, "com.mygdx.pgame.levels.BombyShotgun"))
+			{
+				if(gun.overLaps(r))
+					gun.remove();
+			}
+			for(BaseActor gun:BaseActor.getList(mainStage, "com.mygdx.pgame.levels.SuperShotgun"))
+			{
+				if(gun.overLaps(r))
+					gun.remove();
+			}
 		}
 			
 		//guns by enemies
@@ -626,6 +641,79 @@ boolean crafted;
 				((CEnemy)e).healthE-=damage;
 			}
 		}
+		//special weapons
+		if(player.getGun().equals(bombyBullets))
+			for(BaseActor gun:BaseActor.getList(mainStage, "com.mygdx.pgame.levels.BombyBullet"))
+			{
+				if(gun.overLaps(e))
+				{
+			
+					if(time3>=0.2f)
+					{
+						int damage=6;
+						TextDamage text=new TextDamage(damage+"",BaseGame.labelStyle);
+						text.setColor(Color.RED);
+						text.setPosition(gun.getX(), gun.getY());
+						
+						((CEnemy) e).healthE-=damage;
+						int random2=MathUtils.random(0,1);
+						if(random2==0)
+						{
+							FirePool firepool=new FirePool(0,0,mainStage);
+							firepool.centerAtActor(e);
+						}
+						else
+						{
+							FirePool firepool=new FirePool(0,0,mainStage);
+							firepool.centerAtActor(e);
+							FirePool firepool2=new FirePool(0,0,mainStage);
+							firepool2.centerAtActor(e);
+						}
+						
+						mainStage.addActor(text);
+						time3=0;
+					}
+				}
+				
+			}
+		if(player.getGun().equals(superShotgun))
+			for(BaseActor gun:BaseActor.getList(mainStage, "com.mygdx.pgame.levels.SuperShotgun"))
+			{
+				if(gun.overLaps(e))
+				{
+					int random=MathUtils.random(7, 12);
+					int damage=random;
+					TextDamage text=new TextDamage(damage+"",BaseGame.labelStyle);
+					text.setColor(Color.ORANGE);
+					text.setPosition(gun.getX(), gun.getY());
+					gun.remove();
+					mainStage.addActor(text);
+					((CEnemy)e).healthE-=damage;
+				}
+			}
+		if(player.getGun().equals(bombyShotgun))
+			for(BaseActor gun:BaseActor.getList(mainStage, "com.mygdx.pgame.levels.BombyShotgun"))
+			{
+				if(gun.overLaps(e))
+				{
+					if(time3>=0.2f)
+					{
+						int random=MathUtils.random(5, 8);
+						int damage=random;
+						TextDamage text=new TextDamage(damage+"",BaseGame.labelStyle);
+						text.setColor(Color.ORANGE);
+						text.setPosition(gun.getX(), gun.getY());
+						gun.remove();
+						mainStage.addActor(text);
+						((CEnemy)e).healthE-=damage;
+						FirePool firepool=new FirePool(0,0,mainStage);
+						firepool.centerAtActor(e);
+						time3=0;
+					}
+					
+				}
+			}
+		
 		for(BaseActor firepool:BaseActor.getList(mainStage, "com.mygdx.pgame.FirePool"))
 		{
 			if(e.overLaps(firepool))

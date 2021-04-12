@@ -13,7 +13,7 @@ import com.mygdx.pgame.levels.SuperShotgun;
 
 public class Player extends BaseActor{
 public int health;
-public Guns currentGun;
+public static Guns currentGun;
 float time;
 Sound gunShot;
 Sound shotGunShot;

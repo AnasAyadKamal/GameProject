@@ -13,6 +13,6 @@ public class MyGdxGame extends BaseGame {
 	public void create()
 	{
 		super.create();
-		setActiveScreen(new Level5());
+		setActiveScreen(new Level1());
 	}
 }

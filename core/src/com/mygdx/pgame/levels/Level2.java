@@ -94,6 +94,13 @@ boolean win;
 	    	}
 		
 	    	player=new Player(500,3,mainStage);
+	        int i=0;
+	           for(BaseActor e:BaseActor.getList(mainStage, "com.mygdx.pgame.Enemy"))
+	           {
+	        	   
+	        	   e.ID=i;
+	        	   i++;
+	           }
 //		for(int i=10;i>0;i--)
 //		{
 //			int random1=MathUtils.random(200,600);

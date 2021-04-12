@@ -1,5 +1,7 @@
 package com.mygdx.pgame.levels;
 
+import java.io.File;
+
 import javax.swing.plaf.TableUI;
 
 import com.badlogic.gdx.Gdx;
@@ -71,6 +73,7 @@ Label youHave;
 BaseActor craftGui;
 boolean distanceP;
 boolean crafted;
+boolean special;
 //end of the new stuff
 
 
@@ -105,8 +108,17 @@ boolean crafted;
 	    	MapProperties props = obj.getProperties();
 	    	new Rock( (float)props.get("x"), (float)props.get("y"), mainStage );
 	    	}
-		
+
 	    	player=new Player(500,3,mainStage);
+	    	
+           new Enemy(200,10,mainStage);
+           int i=0;
+           for(BaseActor e:BaseActor.getList(mainStage, "com.mygdx.pgame.Enemy"))
+           {
+        	   
+        	   e.ID=i;
+        	   i++;
+           }
 //		for(int i=10;i>0;i--)
 //		{
 //			int random1=MathUtils.random(200,600);
@@ -132,8 +144,9 @@ boolean crafted;
 //		
 //		}
 		
-		player.inventory.add(new FireC(-100,-100,mainStage));
 		player.inventory.add(new BulletC(-100,-100,mainStage));
+		player.inventory.add(new ShotgunC(-100,-100,mainStage));
+		
 		health=new BaseActor(0,0,uiStage);
 		health.loadTexture("health.png");
 		health.setWidth(player.health*100);
@@ -214,7 +227,7 @@ boolean crafted;
 		        enemyShot=Gdx.audio.newSound(Gdx.files.internal("enemyShotSound.wav"));
 		        
 		        
-		    	
+		    	special=false;
 	}
 
 	@Override
@@ -232,6 +245,10 @@ boolean crafted;
 		time5+=dt;
 		if(time6<=6)
 			time6+=dt;
+		if(player.currentGun.equals(Guns.SuperShotgun)||player.currentGun.equals(Guns.BombyShotgun)||player.currentGun.equals(Guns.BombyBullet)&&!special)
+		{
+			special=true;
+		}
 		shadow.centerAtActor(player);
 		
 		if(player.health<=0)
@@ -379,6 +396,7 @@ boolean crafted;
 			
 		}
 		//pick ups
+		if(!special)
 		for(BaseActor fPick:BaseActor.getList(mainStage, "com.mygdx.pgame.FirePick"))
 		{
 			if(player.overLaps(fPick)&&!player.getGun().equals(fire)&&time6>3)
@@ -399,6 +417,7 @@ boolean crafted;
 			}
 		
 		}
+		if(!special)
 		for(BaseActor sPick:BaseActor.getList(mainStage, "com.mygdx.pgame.ShotgunPick"))
 		{
 			if(player.overLaps(sPick)&&!player.getGun().equals(shotgun)&&time6>3)
@@ -420,6 +439,7 @@ boolean crafted;
 				}
 			}
 		}
+		if(!special)
 		for(BaseActor bPick:BaseActor.getList(mainStage, "com.mygdx.pgame.BulletPick"))
 		{
 			if(player.overLaps(bPick)&&!player.getGun().equals(guns)&&time6>3)
@@ -466,7 +486,7 @@ boolean crafted;
 	
 		if(keycode==Keys.C&&win)
 		{
-			//BaseGame.setActiveScreen(new Level3());
+			BaseGame.setActiveScreen(new Level6());
 		}
 		if(keycode==Keys.ENTER&&distanceP&&!player.inventory.isEmpty()&&!crafted)
 		{
@@ -474,17 +494,22 @@ boolean crafted;
 			{
 				player.setGun(bombyBullets);
 				crafted=true;
-				
+				craft.remove();
+			
 			}
 			if(player.inventory.get(0).toString().equals("BulletC")&&player.inventory.get(1).toString().equals("ShotgunC")||player.inventory.get(0).toString().equals("ShotgunC")&&player.inventory.get(1).toString().equals("BulletC"))
 			{
 				player.setGun(superShotgun);
 				crafted=true;
+				craft.remove();
+				
 			}
 			if(player.inventory.get(0).toString().equals("FireC")&&player.inventory.get(1).toString().equals("ShotgunC")||player.inventory.get(0).toString().equals("ShotgunC")&&player.inventory.get(1).toString().equals("FireC"))
 			{
 				player.setGun(bombyShotgun);
 				crafted=true;
+				craft.remove();
+				
 			}
 		}
 		

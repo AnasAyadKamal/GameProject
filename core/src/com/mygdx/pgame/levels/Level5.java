@@ -44,6 +44,11 @@ BaseActor ehealth;
 Guns guns;
 Guns fire;
 Guns shotgun;
+//new guns
+Guns superShotgun;
+Guns bombyShotgun;
+Guns bombyBullets;
+//end 
 float time;
 float time2;
 float time3;
@@ -63,6 +68,9 @@ boolean win;
 BaseActor craft;
 Label Get;
 Label youHave;
+BaseActor craftGui;
+boolean distanceP;
+boolean crafted;
 //end of the new stuff
 
 
@@ -124,7 +132,8 @@ Label youHave;
 //		
 //		}
 		
-		
+		player.inventory.add(new FireC(-100,-100,mainStage));
+		player.inventory.add(new BulletC(-100,-100,mainStage));
 		health=new BaseActor(0,0,uiStage);
 		health.loadTexture("health.png");
 		health.setWidth(player.health*100);
@@ -136,18 +145,24 @@ Label youHave;
 		 craft=new BaseActor(0,0,mainStage);
 		craft.loadTexture("crafting.png");
 		craft.setPosition(616,515);
+		craftGui=new BaseActor(200,100,uiStage);
+		craftGui.loadTexture("guiC.png");
+		craftGui.setVisible(false);
 		 Get=new Label("",BaseGame.labelStyle);
 		 try {
+			 if(!player.inventory.isEmpty())
 			 youHave=new Label("You Have {"+player.inventory.get(0)+"} And {"+player.inventory.get(1)+"}",BaseGame.labelStyle);
+			 else
+				 youHave=new Label("Crafted!",BaseGame.labelStyle);
 
 		 }catch(Exception e)
 		 {
 			 e.printStackTrace();
-			 youHave=new Label("You Have {Erro} And {Error},You either have cheated,",BaseGame.labelStyle);
+			 youHave=new Label("You Have {Error} And {Error},You either have cheated\n or something stupid happend\n(to fix restart the game fully)",BaseGame.labelStyle);
 		 }
 		 
-		 youHave.setVisible(true);
-		 youHave.setPosition(262, 482);
+		 youHave.setVisible(false);
+		 youHave.setPosition(230, 100);
 		//end of the new stuff
 		Label playerHealth=new Label("Health",BaseGame.labelStyle);
 		
@@ -185,6 +200,12 @@ Label youHave;
 		        guns=Guns.GUN;
 		        fire=Guns.Fire;
 		        shotgun=Guns.Shotgon;
+		        //new stuff
+		        superShotgun=Guns.SuperShotgun;
+		        bombyShotgun=Guns.BombyShotgun;
+		        bombyBullets=Guns.BombyBullet;
+		        crafted=false;
+		        //end 
 		        player.setGun(guns);
 		        StopGive=true;
 		        dropped=true;
@@ -212,6 +233,7 @@ Label youHave;
 		if(time6<=6)
 			time6+=dt;
 		shadow.centerAtActor(player);
+		
 		if(player.health<=0)
 		{
 			for(BaseActor f:BaseActor.getList(mainStage, "com.mygdx.pgame.Enemy"))
@@ -223,15 +245,21 @@ Label youHave;
 			GameOver.addAction(Actions.fadeIn(1));
 			return;
 		}
-		if(player.overLaps(craft))
+		 distanceP=player.isWithinDistance(50, craft);
+		if(distanceP&&!crafted)
 		{
 			for(BaseActor f:BaseActor.getList(mainStage, "com.mygdx.pgame.Enemy"))
 			{
 				((Enemy)f).pause=true;
 			}
 			
-			
+			craftGui.setVisible(true);
+			youHave.setVisible(true);
 			return;
+		}
+		else {
+			craftGui.setVisible(false);
+			youHave.setVisible(false);
 		}
 		for(BaseActor u:BaseActor.getList(mainStage, "com.mygdx.pgame.SEnemy"))
 		{
@@ -424,6 +452,25 @@ Label youHave;
 		if(keycode==Keys.C&&win)
 		{
 			//BaseGame.setActiveScreen(new Level3());
+		}
+		if(keycode==Keys.ENTER&&distanceP&&!player.inventory.isEmpty()&&!crafted)
+		{
+			if(player.inventory.get(0).toString().equals("BulletC")&&player.inventory.get(1).toString().equals("FireC")||player.inventory.get(0).toString().equals("FireC")&&player.inventory.get(1).toString().equals("BulletC"))
+			{
+				player.setGun(bombyBullets);
+				crafted=true;
+				
+			}
+			if(player.inventory.get(0).toString().equals("BulletC")&&player.inventory.get(1).toString().equals("ShotgunC")||player.inventory.get(0).toString().equals("ShotgunC")&&player.inventory.get(1).toString().equals("BulletC"))
+			{
+				player.setGun(superShotgun);
+				crafted=true;
+			}
+			if(player.inventory.get(0).toString().equals("FireC")&&player.inventory.get(1).toString().equals("ShotgunC")||player.inventory.get(0).toString().equals("ShotgunC")&&player.inventory.get(1).toString().equals("FireC"))
+			{
+				player.setGun(bombyShotgun);
+				crafted=true;
+			}
 		}
 		
 		return false;

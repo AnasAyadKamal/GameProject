@@ -6,7 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.pgame.levels.BombyBullet;
+import com.mygdx.pgame.levels.BombyShotgun;
 import com.mygdx.pgame.levels.Cs;
+import com.mygdx.pgame.levels.SuperShotgun;
 
 public class Player extends BaseActor{
 public int health;
@@ -109,6 +112,64 @@ public static ArrayList<Cs> inventory=new ArrayList<Cs>();
 				bullet3.setMotionAngle(this.getRotation()+10);
 				shotGunShot.play();
 				time=0;
+			}
+		//special weapons
+		if(currentGun.equals(Guns.SuperShotgun))
+		{
+			if(time>=0.2)
+			{
+				SuperShotgun bullet=new SuperShotgun(0,0,this.getStage());
+				SuperShotgun bullet2=new SuperShotgun(0,0,this.getStage());
+				SuperShotgun bullet3=new SuperShotgun(0,0,this.getStage());
+				bullet.setZIndex(7);
+				bullet2.setZIndex(7);
+				bullet3.setZIndex(7);
+				bullet.centerAtActor(this);
+				bullet2.centerAtActor(this);
+				bullet3.centerAtActor(this);
+				bullet.setRotation(this.getRotation());
+				bullet2.setRotation(this.getRotation()-10);
+				bullet3.setRotation(this.getRotation()+10);
+				bullet.setMotionAngle(this.getRotation());
+				bullet2.setMotionAngle(this.getRotation()-10);
+				bullet3.setMotionAngle(this.getRotation()+10);
+				shotGunShot.play();
+				time=0;
+			}
+		}
+		if(currentGun.equals(Guns.BombyShotgun))
+		{
+			if(time>=0.5)
+			{
+				BombyShotgun bullet=new BombyShotgun(0,0,this.getStage());
+				BombyShotgun bullet2=new BombyShotgun(0,0,this.getStage());
+				BombyShotgun bullet3=new BombyShotgun(0,0,this.getStage());
+				bullet.setZIndex(7);
+				bullet2.setZIndex(7);
+				bullet3.setZIndex(7);
+				bullet.centerAtActor(this);
+				bullet2.centerAtActor(this);
+				bullet3.centerAtActor(this);
+				bullet.setRotation(this.getRotation());
+				bullet2.setRotation(this.getRotation()-8);
+				bullet3.setRotation(this.getRotation()+8);
+				bullet.setMotionAngle(this.getRotation());
+				bullet2.setMotionAngle(this.getRotation()-8);
+				bullet3.setMotionAngle(this.getRotation()+8);
+				shotGunShot.play();
+				time=0;
+			}
+		}
+		if(currentGun.equals(Guns.BombyBullet))
+			if(BaseActor.count(this.getStage(), "com.mygdx.pgame.levels.BombyBullet")<=5)
+			{
+				BombyBullet bullet=new BombyBullet(0,0,this.getStage());
+				bullet.setZIndex(7);
+				bullet.centerAtActor(this);
+				bullet.setRotation(this.getRotation());
+				bullet.setMotionAngle(this.getRotation());
+				gunShot.play();
+				
 			}
 	}
 
